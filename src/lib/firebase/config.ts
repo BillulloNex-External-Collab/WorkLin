@@ -3,6 +3,7 @@ import { getAnalytics } from "firebase/analytics";
 import { initializeFirestore } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { getFunctions } from "firebase/functions";
+import { getStorage } from "firebase/storage";
 
 // Firebase client initialization.
 //
@@ -32,8 +33,7 @@ export const db = initializeFirestore(app, {
   experimentalForceLongPolling: true,
 });
 export const auth = getAuth(app);
-// Firebase Storage removed - using Cloudinary instead (see src/lib/storage/cloudinary.ts)
-// export const storage = getStorage(app);
+export const storage = getStorage(app);
 
 // Functions are used for optional "server-side" features (audit logs, 2FA, AI wrappers).
 export const functions = getFunctions(app);

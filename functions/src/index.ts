@@ -216,7 +216,7 @@ export const processAIAction = functions
     try {
       // Initialize the Gemini AI client with our API key
       const genAI = new GoogleGenerativeAI(apiKey);
-      const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+      const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
       // Step 6: Build the system prompt based on the requested task
       let systemPrompt = "";

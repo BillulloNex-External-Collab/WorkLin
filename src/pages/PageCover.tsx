@@ -1,11 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { ImageIcon, Upload, X, Loader2, Trash2, Camera } from 'lucide-react';
-// Adjusted path: goes up one level to src, then into lib
-import { uploadImage } from '../lib/storage/cloudinary';
+import { uploadImage } from '../lib/storage';
 import { cn } from '../lib/utils';
-// Adjusted path: goes up one level to src, then into components/ui
 import { Button } from '../components/ui/button';
-// Adjusted path: goes up one level to src, then into hooks
 import { useToast } from '../hooks/use-toast';
 
 interface PageCoverProps {
@@ -18,7 +15,7 @@ interface PageCoverProps {
 
 // This component renders the cover image for a page.
 // It allows users to upload, change, or remove the cover image.
-// It handles file validation (size/type) and uploading to Cloudinary.
+// It handles file validation (size/type) and uploading to Firebase Storage.
 export const PageCover: React.FC<PageCoverProps> = ({
   url,
   pageId,
@@ -62,12 +59,11 @@ export const PageCover: React.FC<PageCoverProps> = ({
 
       if (error) {
         console.error('Upload error:', error);
-        // Check for specific error messages
         let errorMessage = error;
-        if (error.includes('Cloudinary cloud name not configured')) {
-          errorMessage = 'Cloudinary not configured. Please add VITE_CLOUDINARY_CLOUD_NAME to .env file.';
-        } else if (error.includes('Upload preset')) {
-          errorMessage = 'Cloudinary upload preset not configured. Please check your .env file.';
+        if (error.includes('storage/unauthorized')) {
+          errorMessage = 'Upload not authorized. Please check Firebase Storage rules.';
+        } else if (error.includes('storage/quota-exceeded')) {
+          errorMessage = 'Storage quota exceeded. Please check your Firebase plan.';
         } else if (error.includes('network') || error.includes('fetch')) {
           errorMessage = 'Network error. Please check your internet connection.';
         }
@@ -95,12 +91,7 @@ export const PageCover: React.FC<PageCoverProps> = ({
       }
     } catch (error: any) {
       console.error('Upload failed:', error);
-      let errorMessage = error?.message || 'Could not upload the image. Please try again.';
-
-      // Provide helpful error messages
-      if (errorMessage.includes('Cloudinary')) {
-        errorMessage = 'Cloudinary not configured. Please set up Cloudinary in your .env file.';
-      }
+      const errorMessage = error?.message || 'Could not upload the image. Please try again.';
 
       toast({
         title: "Upload failed",

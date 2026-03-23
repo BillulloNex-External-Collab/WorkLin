@@ -104,65 +104,22 @@ Password: Password123!
 5. Set up Firestore security rules (see `firestore.rules`)
 6. Set up Storage security rules (see `storage.rules`)
 
-#### 2. Cloudinary Setup (Free - 25GB Storage)
+#### 2. Yjs Server Setup (Optional - For Real-time Collaboration)
 
-WorkLin uses Cloudinary for image storage (free tier with 25GB).
+For real-time collaboration features, deploy the Yjs server on Cloud Run or any Node host:
 
-1. Sign up at [https://cloudinary.com/users/register/free](https://cloudinary.com/users/register/free) (no credit card needed)
-2. Get your credentials from Dashboard:
-   - Cloud Name
-   - API Key
-   - API Secret
-3. Create an Upload Preset:
-   - Go to Settings > Upload > Upload presets
-   - Add new preset: `worklin_upload`
-   - Set Signing mode: `Unsigned`
-4. Add to `.env` file:
+1. The Yjs server is in the `yjs-server/` directory
+2. Deploy it to Cloud Run, Railway, Fly.io, or any platform that runs Node.js
+3. Add the WebSocket URL to your `.env` file:
    ```env
-   VITE_CLOUDINARY_CLOUD_NAME=your-cloud-name
-   VITE_CLOUDINARY_API_KEY=your-api-key
-   VITE_CLOUDINARY_UPLOAD_PRESET=worklin_upload
+   VITE_YJS_WEBSOCKET_URL=wss://your-yjs-server-url
    ```
 
-See [MIGRATE_TO_CLOUDINARY.md](MIGRATE_TO_CLOUDINARY.md) for detailed setup instructions.
-
-#### 3. Render Setup (Optional - For Real-time Collaboration)
-
-For real-time collaboration features, deploy the Yjs server on Render (free tier):
-
-1. Sign up at [https://render.com](https://render.com) (use GitHub to sign in)
-2. Create a new **Web Service**
-3. Connect your GitHub repository: `https://github.com/fyiclub-vitb/WorkLin`
-4. Configure the service settings:
-   - **Name**: `worklin-yjs-server` (or any name you prefer)
-   - **Region**: Choose closest to you (e.g., Oregon, Frankfurt)
-   - **Branch**: `main`
-   - **Root Directory**: `yjs-server` ⚠️ **Important**: Must be `yjs-server`, not `src`
-   - **Build Command**: `npm install`
-   - **Start Command**: `npm start` (or `node server.js`)
-   - **Instance Type**: **Free**
-5. Click **Create Web Service** and wait for deployment (2-5 minutes)
-6. Once deployed, get your WebSocket URL:
-   - Your service URL will be: `https://worklin-yjs-server.onrender.com`
-   - **WebSocket URL**: `wss://worklin-yjs-server.onrender.com` (use `wss://` for secure WebSocket)
-7. Add to your `.env` file:
-   ```env
-   VITE_YJS_WEBSOCKET_URL=wss://worklin-yjs-server.onrender.com
-   ```
-   (Replace with your actual Render service URL)
-
-**Important Notes**:
+**Notes**:
 - ✅ Collaboration is optional. The app works perfectly without it!
 - ✅ Use `wss://` (secure WebSocket) not `ws://` for production
-- ✅ The server automatically uses the PORT environment variable set by Render
-- ✅ Free tier spins down after 15 minutes of inactivity (takes ~30 seconds to wake up)
 
-**For Production Deployment**:
-- Add `VITE_YJS_WEBSOCKET_URL` to your frontend hosting platform's environment variables:
-  - **Vercel**: Settings → Environment Variables
-  - **Netlify**: Site settings → Environment variables
-
-#### 4. Google Gemini API Setup (Optional - For AI Features)
+#### 3. Google Gemini API Setup (Optional - For AI Features)
 
 WorkLin includes AI writing assistance powered by Google Gemini.
 
@@ -180,7 +137,7 @@ WorkLin includes AI writing assistance powered by Google Gemini.
 
 **Free Tier**: 60 RPM, 1,500 requests/day - No credit card required!
 
-**Note**: The API key is used directly in the frontend. For production, set `VITE_GEMINI_API_KEY` in your hosting platform's environment variables (Vercel, Netlify, etc.).
+**Note**: For production, set `VITE_GEMINI_API_KEY` in your Firebase project's environment config.
 
 See [GEMINI_API_SETUP.md](GEMINI_API_SETUP.md) for detailed setup instructions.
 
@@ -198,6 +155,9 @@ npm run preview
 
 # Type checking
 npm run lint
+
+# Deploy to Firebase
+npm run deploy
 ```
 
 ## 🛠️ Tech Stack
@@ -215,10 +175,10 @@ npm run lint
 ### Backend & Database
 - **Database**: Firebase Firestore
 - **Authentication**: Firebase Auth
-- **Storage**: Cloudinary (25GB free tier) - Image and file storage
+- **Storage**: Firebase Storage - Image and file storage
 - **Functions**: Firebase Cloud Functions
-- **Hosting**: Firebase Hosting, Vercel, or Render
-- **Collaboration Server**: Render (free tier) - Yjs WebSocket server
+- **Hosting**: Firebase Hosting
+- **Collaboration Server**: Cloud Run (or any Node host) - Yjs WebSocket server
 
 ### Collaboration
 - **Real-time Sync**: Yjs + WebRTC (or Firebase)
@@ -327,7 +287,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 - [x] Basic block-based editor
 - [x] Firebase integration
-- [x] Cloudinary image storage (25GB free)
+- [x] Firebase Storage for image uploads
 - [x] Authentication (demo mode)
 - [x] Workspace management
 - [x] Trash system with restore functionality
@@ -336,7 +296,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [x] Login page with demo credentials
 - [x] Responsive design (mobile-friendly)
 - [x] Dark mode support
-- [X] Real-time collaboration (Yjs + Render) - See Issue #21
+- [X] Real-time collaboration (Yjs + Cloud Run) - See Issue #21
 - [X] AI writing assistant - See Issue #23
 - [X] Database views - See Issue #14
 - [X] Comments system - See Issue #12
@@ -357,7 +317,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🔗 Links
 
 - **GitHub**: [https://github.com/fyiclub-vitb/WorkLin](https://github.com/fyiclub-vitb/WorkLin)
-- **Live Demo**: [https://worklin-fyi.vercel.app](https://worklin-fyi.vercel.app)
+- **Live Demo**: Deployed on Firebase Hosting
 
 ## Discussions 
 💬 Have questions or doubts?

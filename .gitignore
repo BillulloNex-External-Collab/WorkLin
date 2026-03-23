@@ -40,6 +40,11 @@ build
 coverage
 .nyc_output
 
+# Firebase
+.firebase/
+firebase-debug.log
+firebase-debug.*.log
+
 # Misc
 *.tsbuildinfo
 .cache
